@@ -1,51 +1,58 @@
-const bcrypt = require("bcrypt");
-const prisma = require("../config/prisma");
+const authService = require("../services/auth.service");
+const messages = require("../constants/messages");
+const response = require("../utils/response");
 
-const register = async (req, res) => {
-    try {
-        const { name, email, address, password } = req.body;
+class AuthController {
+  async register(req, res) {
+    const user = await authService.register(req.body);
 
-        
-        const existingUser = await prisma.user.findUnique({
-            where: { email }
-        });
+    return response.success(
+      res,
+      201,
+      messages.AUTH.REGISTER_SUCCESS,
+      user
+    );
+  }
 
-        if (existingUser) {
-            return res.status(409).json({
-                success: false,
-                message: "Email already exists"
-            });
-        }
+  async login(req, res) {
+    const { email, password } = req.body;
 
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await authService.login(email, password);
 
-       
-        await prisma.user.create({
-            data: {
-                name,
-                email,
-                address,
-                password: hashedPassword,
-                role: "USER"
-            }
-        });
+    return response.success(
+      res,
+      200,
+      messages.AUTH.LOGIN_SUCCESS,
+      result
+    );
+  }
 
-        return res.status(201).json({
-            success: true,
-            message: "User registered successfully"
-        });
+  async changePassword(req, res) {
+    const { currentPassword, newPassword } = req.body;
 
-    } catch (error) {
-        console.error("Register Error:", error);
+    await authService.changePassword(
+      req.user.id,
+      currentPassword,
+      newPassword
+    );
 
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-};
+    return response.success(
+      res,
+      200,
+      messages.AUTH.PASSWORD_CHANGED
+    );
+  }
 
-module.exports = {
-    register
-};
+  async getCurrentUser(req, res) {
+    const user = await authService.getCurrentUser(req.user.id);
+
+    return response.success(
+      res,
+      200,
+      messages.AUTH.PROFILE_FETCHED,
+      user
+    );
+  }
+}
+
+module.exports = new AuthController();

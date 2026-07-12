@@ -32,6 +32,31 @@ const registerValidator = [
     ),
 ];
 
+const loginValidator = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Email is required")
+        .isEmail()
+        .withMessage("Invalid email"),
+
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required"),
+];
+
+const changePasswordValidator = [
+  body("currentPassword")
+    .notEmpty(),
+
+  body("newPassword")
+    .isLength({ min: 8, max: 16 })
+    .matches(/[A-Z]/)
+    .matches(/[!@#$%^&*(),.?":{}|<>]/),
+];
+
 module.exports = {
   registerValidator,
+  loginValidator,
+  changePasswordValidator,
 };
