@@ -38,7 +38,7 @@ model User {
 
 model Store {
   id      Int    @id @default(autoincrement())
-  name    String @db.VarChar(100)
+  name    String @unique@db.VarChar(100)
   email   String @unique
   address String @db.VarChar(400)
 
