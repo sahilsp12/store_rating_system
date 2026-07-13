@@ -170,6 +170,133 @@ const existsByOwner = async (ownerId) => {
   return count > 0;
 };
 
+const findStoresWithUserRating = async ({
+  userId,
+  search = "",
+  page = 1,
+  limit = 10,
+  sortBy = "createdAt",
+  order = "desc",
+}) => {
+  const { skip, take } = buildPagination(page, limit);
+
+  const { orderBy } = buildSorting(
+    sortBy,
+    order,
+    ["name", "email", "address", "createdAt"]
+  );
+
+  const where = {
+    ...(search && {
+      OR: [
+        {
+          name: {
+            contains: search,
+          },
+        },
+        {
+          email: {
+            contains: search,
+          },
+        },
+        {
+          address: {
+            contains: search,
+          },
+        },
+      ],
+    }),
+  };
+
+  const [stores, total] = await prisma.$transaction([
+    prisma.store.findMany({
+      where,
+
+      include: {
+        owner: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+
+        ratings: {
+          select: {
+            rating: true,
+            userId: true,
+          },
+        },
+      },
+
+      skip,
+      take,
+      orderBy,
+    }),
+
+    prisma.store.count({
+      where,
+    }),
+  ]);
+
+  const formattedStores = stores.map((store) => {
+    const totalRatings = store.ratings.length;
+
+    const averageRating =
+      totalRatings === 0
+        ? 0
+        : Number(
+            (
+              store.ratings.reduce(
+                (sum, rating) => sum + rating.rating,
+                0
+              ) / totalRatings
+            ).toFixed(1)
+          );
+
+    const userRating =
+      store.ratings.find(
+        (rating) => rating.userId === Number(userId)
+      )?.rating || null;
+
+    return {
+      id: store.id,
+      name: store.name,
+      email: store.email,
+      address: store.address,
+      owner: store.owner,
+      averageRating,
+      userRating,
+      createdAt: store.createdAt,
+    };
+  });
+
+  return {
+    stores: formattedStores,
+    total,
+  };
+};
+
+const findStoreDetails = (id) => {
+  return prisma.store.findUnique({
+    where: { id },
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      ratings: {
+        select: {
+          rating: true,
+          userId: true,
+        },
+      },
+    },
+  });
+};
+
 module.exports = {
   create,
   count,
@@ -184,4 +311,7 @@ module.exports = {
   existsByName,
   existsByOwner,
 
+  findStoresWithUserRating,
+  findStoreDetails,
+  
 };

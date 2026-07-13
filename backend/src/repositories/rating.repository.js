@@ -44,11 +44,31 @@ const getAverageRating = (storeId) => {
   });
 };
 
+const findById = (id) => {
+  return prisma.rating.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
+const findByStore = (storeId) => {
+  return prisma.rating.findMany({
+    where: {
+      storeId,
+    },
+  });
+};
+
 module.exports = {
   count,
   create,
   update,
-  
+
   findByUserAndStore,
   getAverageRating,
+
+
+  findById,
+  findByStore,
 };

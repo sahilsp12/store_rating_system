@@ -26,6 +26,9 @@ module.exports = {
   INVALID_OWNER: "Selected user is not a store owner.",
   EMAIL_EXISTS: "Store email already exists.",
   NAME_EXISTS: "Store name already exists.",
+  NOT_FOUND: "Store not found.",
+ STORES_FETCHED: "Stores fetched successfully.",
+  STORE_DETAILS_FETCHED: "Store details fetched successfully.",
 },
 
 ADMIN: {
@@ -35,6 +38,13 @@ ADMIN: {
   USERS_FETCHED: "Users fetched successfully.",
   STORES_FETCHED: "Stores fetched successfully.",
   USER_DETAILS_FETCHED: "User details fetched successfully.",
-}
+},
+
+RATING: {
+  ALREADY_SUBMITTED: "You have already rated this store.",
+  NOT_FOUND: "Rating not found.",
+  SUBMITTED: "Rating submitted successfully.",
+  UPDATED: "Rating updated successfully.",
+},
 
 };
