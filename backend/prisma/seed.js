@@ -19,7 +19,7 @@ async function main() {
   });
 
   if (existingAdmin) {
-    console.log("✅ Default admin already exists.");
+    console.log("Default admin already exists.");
     return;
   }
 
@@ -36,7 +36,7 @@ async function main() {
     },
   });
 
-  console.log("✅ Default Admin created successfully.");
+  console.log("Default Admin created successfully.");
   console.log("-----------------------------------------");
   console.log("Email    : admin@example.com");
   console.log("Password : Admin@123");
