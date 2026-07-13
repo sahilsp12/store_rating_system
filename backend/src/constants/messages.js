@@ -47,4 +47,8 @@ RATING: {
   UPDATED: "Rating updated successfully.",
 },
 
+STORE_OWNER: {
+  DASHBOARD_FETCHED: "Store owner dashboard fetched successfully.",
+},
+
 };
