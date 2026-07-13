@@ -91,16 +91,51 @@ class AdminService {
   }
 
   async getUserDetails(id) {
-    const user = await userRepository.findUserDetails(Number(id));
+  const user = await userRepository.findUserDetails(Number(id));
 
-    if (!user) {
-      const error = new Error(messages.AUTH.USER_NOT_FOUND);
-      error.status = 404;
-      throw error;
-    }
-
-    return user;
+  if (!user) {
+    const error = new Error(messages.AUTH.USER_NOT_FOUND);
+    error.status = 404;
+    throw error;
   }
+
+  let store = null;
+
+  if (user.role === "STORE_OWNER" && user.ownedStore) {
+    const ratings = user.ownedStore.ratings;
+
+    const averageRating =
+      ratings.length === 0
+        ? 0
+        : Number(
+            (
+              ratings.reduce(
+                (sum, item) => sum + item.rating,
+                0
+              ) / ratings.length
+            ).toFixed(1)
+          );
+
+    store = {
+      id: user.ownedStore.id,
+      name: user.ownedStore.name,
+      email: user.ownedStore.email,
+      address: user.ownedStore.address,
+      averageRating,
+    };
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    address: user.address,
+    role: user.role,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    store,
+  };
+}
 
   async getStores(query) {
     const result = await storeRepository.findStores(query);

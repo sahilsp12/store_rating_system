@@ -144,7 +144,22 @@ const findUserDetails = (id) => {
       role: true,
       createdAt: true,
       updatedAt: true,
-      ownedStore: true,
+
+      ownedStore: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          address: true,
+
+          ratings: {
+            select: {
+              rating: true,
+            },
+          },
+        },
+      },
+
       ratings: {
         include: {
           store: true,
