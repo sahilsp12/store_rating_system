@@ -69,7 +69,7 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-#### 7. Seed the default admin and initial data (if applicable)
+#### 7. Seed the default admin and initial data 
 ```bash
 npx prisma db seed
 ```
