@@ -30,39 +30,69 @@ This is a full-stack web application designed for a Store Rating System. Users c
 ## How to Run
 
 ### Prerequisites
-Ensure you have Node.js installed.
+Ensure you have Node.js and MySQL installed.
 
-### 1. Run the Backend
-1. Open terminal and navigate to the backend folder:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up database configuration in `.env` file.
-4. Run migrations if necessary:
-   ```bash
-   npx prisma migrate dev
-   ```
-5. Start the backend server:
-   ```bash
-   npm start
-   ```
-   (Runs on `http://localhost:5000`)
+### 1. Backend Setup
 
-### 2. Run the Frontend
-1. Open a new terminal and navigate to the frontend folder:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-   (Runs on `http://localhost:5173`)
+#### 1. Navigate to the backend folder
+```bash
+cd backend
+```
+
+#### 2. Install dependencies
+```bash
+npm install
+```
+
+#### 3. Create a `.env` file in the `backend` directory and add the following:
+```env
+PORT=5000
+DATABASE_URL="mysql://root:YOUR_MYSQL_PASSWORD@localhost:3306/store_rating_system"
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=7d
+BCRYPT_SALT_ROUNDS=10
+```
+> Replace `YOUR_MYSQL_PASSWORD` with your local MySQL password.
+
+#### 4. Create the database
+```sql
+CREATE DATABASE store_rating_system;
+```
+
+#### 5. Generate Prisma Client
+```bash
+npx prisma generate
+```
+
+#### 6. Apply database migrations
+```bash
+npx prisma migrate dev
+```
+
+#### 7. Seed the default admin and initial data (if applicable)
+```bash
+npx prisma db seed
+```
+
+#### 8. Start the backend server
+```bash
+npm run dev
+```
+
+### 2. Frontend Setup
+
+#### 1. Navigate to the frontend folder
+```bash
+cd frontend
+```
+
+#### 2. Install dependencies
+```bash
+npm install
+```
+
+#### 3. Start the Vite development server
+```bash
+npm run dev
+```
+(Runs on `http://localhost:5173`)
