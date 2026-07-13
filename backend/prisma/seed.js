@@ -3,8 +3,14 @@ const { PrismaClient } = require("../src/generated/prisma");
 
 const prisma = new PrismaClient();
 
+const DEFAULT_ADMIN = {
+  name: "System Administrator User",
+  email: "admin@example.com",
+  address: "Admin Headquarter Office",
+};
+
 async function main() {
-  const adminEmail = "admin@example.com";
+  const adminEmail = DEFAULT_ADMIN.email;
 
   const existingAdmin = await prisma.user.findUnique({
     where: {
